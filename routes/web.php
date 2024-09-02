@@ -14,6 +14,7 @@ use App\Livewire\Products;
 |
 */
 
+
 Route::get('/', function () {
     return view('welcome');
 });
