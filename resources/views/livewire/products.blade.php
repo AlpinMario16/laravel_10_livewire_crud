@@ -1,11 +1,18 @@
 <div class="row justify-content-center mt-3">
     <div class="col-md-12">
 
-        @if (session()->has('message'))
-            <div class="alert alert-success" role="alert">
-                {{ session('message') }}
-            </div>
-        @endif
+    @if(session('success'))
+<script>
+    Swal.fire({
+        title: 'Berhasil!',
+        text: "{{ session('success') }}",
+        icon: 'success',
+        confirmButtonText: 'OK'
+    });
+</script>
+@endif
+
+
 
         @include('livewire.updateOrCreate')
 
@@ -45,11 +52,11 @@
                                         <i class="bi bi-pencil-square"></i> Edit
                                     </button>   
 
-                                    <button wire:click="delete({{ $product->id }})" 
-                                        wire:confirm="Are you sure you want to delete this product?"
-                                        class="btn btn-danger btn-sm">
-                                        <i class="bi bi-trash"></i> Delete
+                                    <button wire:click="$emit('triggerDelete', {{ $product->id }})" class="btn btn-danger btn-sm">
+                                    <i class="bi bi-trash"></i> Hapus
                                     </button>
+                                    
+
                                 </td>
                             </tr>
                         @empty

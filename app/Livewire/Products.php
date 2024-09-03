@@ -67,12 +67,17 @@ class Products extends Component
         $this->resetFields();
     }
 
-    public function delete($id)
-    {
-        Product::find($id)->delete();
+    public function confirmDelete($id)
+{
+    $this->dispatchBrowserEvent('triggerDelete', $id);
+}
 
-        session()->flash('message', 'Product is deleted.');
-    }
+public function delete($id)
+{
+    Product::find($id)->delete();
+    session()->flash('message', 'Produk berhasil dihapus!');
+}
+
 
     public function render()
     {
