@@ -12,7 +12,13 @@ class Products extends Component
 {
     use WithPagination;
 
-    public $search;
+    public $searchTerm;
+
+    protected $listeners = [
+        'deleteConfirmed' => 'delete',
+        'updateDescription' => 'updateDescription', // Listener untuk CKEditor
+    ];
+
 
     #[Locked]
     public $product_id;
@@ -33,34 +39,26 @@ class Products extends Component
     {
         $this->title = 'Add New Product';
 
-        $this->reset('name', 'description', 'product_id');
+        $this->reset('name', 'description');
 
         $this->isEdit = false;
     }
 
     public function save()
-{
-    // Validasi secara eksplisit
-    $this->validate([
-        'name' => 'required',
-        'description' => 'required',
-    ]);
+    {
+        $this->validate([
+            'name' => 'required',
+            'description' => 'required',
+        ]);
 
-    Product::updateOrCreate(['id' => $this->product_id], [
-        'name' => $this->name,
-        'description' => $this->description,
-    ]);
+        Product::updateOrCreate(['id' => $this->product_id], [
+            'name' => $this->name,
+            'description' => $this->description,
+        ]);
 
-    // Reset field setelah menyimpan
-    $this->resetFields();
-
-    // Kirim notifikasi sukses ke browser
-    $this->dispatchBrowserEvent('alert', [
-        'type' => 'success',
-        'message' => $this->product_id ? 'Product is updated.' : 'Product is added.'
-    ]);
-}
-
+        session()->flash('success', $this->product_id ? 'Product updated!' : 'Product created!');
+        $this->resetFields();
+    }
 
     public function edit($id)
     {
@@ -82,36 +80,39 @@ class Products extends Component
         $this->resetFields();
     }
 
-    public function confirmDelete($id)
-    {
-        $this->dispatchBrowserEvent('triggerDelete', ['id' => $id]);
-    }
+    public function deleteConfirmed($id)
+{
+    // Panggil method delete untuk menghapus produk
+    $this->delete($id);
+}
 
-    public function delete($id)
-    {
-        Product::find($id)->delete();
-        
-        $this->dispatchBrowserEvent('alert',[
-             'type'=>'success',
-             'message'=>'Product deleted successfully.'
-         ]);
-    }
+public function delete($id)
+{
+    Product::find($id)->delete();
+
+    session()->flash('success', 'Product has been deleted.');
+}
+
 
     public function updatingSearch()
     {
         $this->resetPage();
     }
 
-    public function render()
+    public function updateDescription($value)
     {
-        $products = Product::latest()
-            ->when($this->search, function ($query) {
-                $query->where('name', 'like', "%{$this->search}%");
-            })
-            ->paginate(10);
-
-        return view('livewire.products', [
-            'products' => $products,
-        ]);
+        $this->description = $value; // Update deskripsi dari CKEditor
     }
+
+    public function render()
+{
+    $products = Product::where('name', 'like', '%' . $this->searchTerm . '%')
+                        ->orWhere('description', 'like', '%' . $this->searchTerm . '%')
+                        ->paginate(5);
+
+    return view('livewire.products', [
+        'products' => $products,
+    ]);
+}
+
 }

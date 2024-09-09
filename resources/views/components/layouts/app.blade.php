@@ -9,19 +9,25 @@
         <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
         
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     </head>
     <body>
         <div class="container">
             <h3 class="mt-3">Laravel 10 Livewire CRUD Application Tutorial - <a href="https://www.allphptricks.com/">AllPHPTricks.com</a></h3>
             
             {{ $slot }}
-            
+          
         </div>
-        
+
+      
+
+       
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
         <script src="{{ asset('js/sweetalert2.min.js') }}"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
-
 
 
 
