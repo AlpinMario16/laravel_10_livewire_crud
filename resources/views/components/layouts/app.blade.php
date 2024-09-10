@@ -3,33 +3,85 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
         <title>{{ $title ?? 'Laravel 10 Livewire CRUD Application Tutorial - AllPHPTricks.com' }}</title>
+        
+        <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+        
+        <!-- SweetAlert2 CSS -->
         <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
         
+        <!-- Bootstrap Icons -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+        
+        <!-- Font Awesome -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <script src="//unpkg.com/alpinejs" defer></script>
+        <script src="https://cdn.ckeditor.com/ckeditor5/35.3.0/classic/ckeditor.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     </head>
     <body>
         <div class="container">
             <h3 class="mt-3">Laravel 10 Livewire CRUD Application Tutorial - <a href="https://www.allphptricks.com/">AllPHPTricks.com</a></h3>
             
+            <!-- Dynamic content slot -->
             {{ $slot }}
-          
         </div>
 
-      
-
-       
-
+        <!-- Bootstrap Bundle with Popper -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+        
+        <!-- SweetAlert2 JS -->
         <script src="{{ asset('js/sweetalert2.min.js') }}"></script>
-        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+        
+
+                <!-- CKEditor -->
+                <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+               
+
+        <!-- Inisialisasi CKEditor -->
 
 
+<script>
+    document.addEventListener('livewire:load', function () {
+    ClassicEditor
+        .create(document.querySelector('#description'))
+        .then(editor => {
+            editor.model.document.on('change:data', () => {
+                let data = editor.getData();
+                console.log(data); // Cek apakah data benar diambil dari CKEditor
+                Livewire.emit('updateDescription', data); // Emit ke Livewire
+            });
+        })
+        .catch(error => {
+            console.error('CKEditor Error:', error);
+        });
+});
 
+
+    // Listener untuk konfirmasi penghapusan produk
+    window.addEventListener('triggerDelete', event => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Livewire.emit('deleteConfirmed', event.detail.id);
+                
+                Swal.fire(
+                    'Deleted!',
+                    'Product has been deleted.',
+                    'success'
+                );
+            }
+        });
+    });
+</script>
     </body>
 </html>

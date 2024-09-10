@@ -48,9 +48,12 @@
                                         <i class="bi bi-pencil-square"></i> Edit
                                     </button>   
 
-                                    <button wire:click="deleteConfirmed({{ $product->id }})" class="btn btn-danger btn-sm">
-                                        <i class="bi bi-trash"></i> Delete
-                                    </button>
+                                    
+                    <button 
+                         @click="deleteConfirmed({{ $product->id }})" class="btn btn-danger btn-sm">
+                    
+                        <i class="bi bi-trash"></i> Delete
+                    </button>
 
                                     
                                 </td>
@@ -76,45 +79,3 @@
     </div>
 </div>
 
-<!-- Inisialisasi CKEditor -->
-
-
-<script>
-    document.addEventListener('livewire:load', function () {
-        // Inisialisasi CKEditor untuk description
-        ClassicEditor
-            .create(document.querySelector('#description'))
-            .then(editor => {
-                // Sinkronkan data CKEditor dengan Livewire
-                editor.model.document.on('change:data', () => {
-                    Livewire.emit('updateDescription', editor.getData()); // Emit ke Livewire
-                });
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    });
-
-    // Listener untuk konfirmasi penghapusan produk
-    window.addEventListener('triggerDelete', event => {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Livewire.emit('deleteConfirmed', event.detail.id);
-                
-                Swal.fire(
-                    'Deleted!',
-                    'Product has been deleted.',
-                    'success'
-                );
-            }
-        });
-    });
-</script>

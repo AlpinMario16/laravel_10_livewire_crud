@@ -18,6 +18,7 @@ class Products extends Component
         'deleteConfirmed' => 'delete',
         'updateDescription' => 'updateDescription', // Listener untuk CKEditor
     ];
+    
 
 
     #[Locked]
@@ -45,20 +46,24 @@ class Products extends Component
     }
 
     public function save()
-    {
-        $this->validate([
-            'name' => 'required',
-            'description' => 'required',
-        ]);
+{
+    $this->validate([
+        'name' => 'required',
+        'description' => 'required',
+    ]);
 
-        Product::updateOrCreate(['id' => $this->product_id], [
-            'name' => $this->name,
-            'description' => $this->description,
-        ]);
+    Product::updateOrCreate(['id' => $this->product_id], [
+        'name' => $this->name,
+        'description' => $this->description,
+    ]);
 
-        session()->flash('success', $this->product_id ? 'Product updated!' : 'Product created!');
-        $this->resetFields();
-    }
+    session()->flash('success', $this->product_id ? 'Product updated!' : 'Product created!');
+
+    // Emit untuk mereset editor setelah menyimpan
+    $this->emit('resetFields');
+    $this->resetFields();
+}
+
 
     public function edit($id)
     {
