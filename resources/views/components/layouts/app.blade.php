@@ -35,53 +35,5 @@
         <!-- SweetAlert2 JS -->
         <script src="{{ asset('js/sweetalert2.min.js') }}"></script>
         
-
-                <!-- CKEditor -->
-                <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
-               
-
-        <!-- Inisialisasi CKEditor -->
-
-
-<script>
-    document.addEventListener('livewire:load', function () {
-    ClassicEditor
-        .create(document.querySelector('#description'))
-        .then(editor => {
-            editor.model.document.on('change:data', () => {
-                let data = editor.getData();
-                console.log(data); // Cek apakah data benar diambil dari CKEditor
-                Livewire.emit('updateDescription', data); // Emit ke Livewire
-            });
-        })
-        .catch(error => {
-            console.error('CKEditor Error:', error);
-        });
-});
-
-
-    // Listener untuk konfirmasi penghapusan produk
-    window.addEventListener('triggerDelete', event => {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Livewire.emit('deleteConfirmed', event.detail.id);
-                
-                Swal.fire(
-                    'Deleted!',
-                    'Product has been deleted.',
-                    'success'
-                );
-            }
-        });
-    });
-</script>
     </body>
 </html>

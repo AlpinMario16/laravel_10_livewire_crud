@@ -17,12 +17,11 @@
             <div class="card-header">Product List</div>
             <div class="card-body">
             <div class="input-group mb-3">
-    <input type="text" wire:model="searchTerm" placeholder="Cari Produk..." class="form-control form-control-sm" aria-label="Search">
-<div class="input-group-append">
-
-    <button class="btn btn-info btn-sm ml-2" type="button" wire:click="$refresh">Cari</button>
+            <div class="input-group-append">
+    <input type="text" wire:model.live="searchTerm" placeholder="Cari Produk..." class="form-control form-control-sm" aria-label="Search">
 </div>
             </div>
+            
 
 
 
@@ -50,8 +49,8 @@
 
                                     
                     <button 
-                         @click="deleteConfirmed({{ $product->id }})" class="btn btn-danger btn-sm">
-                    
+         
+                          @click="deleteConfirmed({{ $product->id }})" wire:click="deleteConfirmed({{ $product->id }})" class="btn btn-danger btn-sm">
                         <i class="bi bi-trash"></i> Delete
                     </button>
 

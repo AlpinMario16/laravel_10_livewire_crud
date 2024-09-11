@@ -1,4 +1,12 @@
-<div x-data="{ showForm: false, isProcessing: false }" class="row justify-content-center mt-3 mb-3">
+<div x-data="{ showForm: false, isProcessing: false, initializeEditor: () => {
+    setTimeout(() => {
+        if (!ClassicEditor.instances['description']) {
+            ClassicEditor
+                .create(document.querySelector('#description'))
+                .catch(error => console.error(error));
+        }
+    }, 50); // Tunda untuk memastikan elemen sudah di-render
+}}" class="row justify-content-center mt-3 mb-3">
     <div class="col-md-12">
 
         <!-- Tombol untuk membuka atau menutup formulir -->
@@ -27,10 +35,11 @@
                         </div>
                     </div>
 
-                    <div class="mb-3 row">
+                    <div class="mb-3 row" wire:ignore>
                         <label for="description" class="col-md-4 col-form-label text-md-end text-start">Product Description</label>
                         <div class="col-md-6">
-                            <textarea class="form-control @error('description') is-invalid @enderror" id="description" wire:model.defer="description"></textarea>
+                        <textarea   
+                        class="form-control @error('description') is-invalid @enderror" id="description" wire:model.defer="description"></textarea>
                             @if ($errors->has('description'))
                                 <span class="text-danger">{{ $errors->first('description') }}</span>
                             @endif
@@ -39,7 +48,7 @@
 
                     <div class="mb-3 row">
                         <button type="submit" class="col-md-3 offset-md-5 btn btn-success" :disabled="isProcessing">
-                            Save
+                            Simpan
                         </button>
                     </div>
 
@@ -51,6 +60,15 @@
                         </div>
                     @endif
 
+                       <!-- Tombol Add More -->
+                       @if($isAdd)
+                    <div class="mb-3 row">
+                        <button type="button" class="col-md-3 offset-md-5 btn btn-primary" @click="inputs.push({ name: '', description: '' })">
+                            Add More
+                        </button>
+                    </div>
+                     @endif
+
                     <div class="mb-3 row">
                         <span x-show="isProcessing" class="col-md-3 offset-md-5 text-primary">Processing...</span>
                     </div>
@@ -61,14 +79,36 @@
     </div>    
 </div>
 <!-- Tambahkan skrip CKEditor -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
+<script>    
+document.addEventListener('DOMContentLoaded', function() {
+    const descriptionElement = document.querySelector('#description');
+    let editorInstance;
+
+    if (descriptionElement) {
         ClassicEditor
-            .create(document.querySelector('#description'))
+            .create(descriptionElement)
+            .then(editor => {
+                editorInstance = editor;
+            })
             .catch(error => {
-                console.error(error);
+                console.error('Error initializing ClassicEditor:', error);
             });
+    } else {
+        console.error('Element with id #description not found.');
+    }
+
+    // Emit data sebelum form submit
+    Livewire.on('submitForm', () => {
+        const descriptionData = editorInstance.getData();
+        Livewire.emit('updateDescription', descriptionData); // Emit data CKEditor ke Livewire
     });
+});
+
+
+
+
+
+
 
     function deleteConfirmed(id) {
         Swal.fire({
@@ -81,6 +121,7 @@
   confirmButtonText: "Yes, delete it!"
 }).then((result) => {
   if (result.isConfirmed) {
+    console.log('deleteConfirmed', id)
     Swal.fire({
       title: "Deleted!",
       text: "Your file has been deleted.",
@@ -88,7 +129,8 @@
     });
   }
 });
-    }
+}
+
     function success(id) {
     Swal.fire({
   position: "top-end",

@@ -16,7 +16,7 @@ class Products extends Component
 
     protected $listeners = [
         'deleteConfirmed' => 'delete',
-        'updateDescription' => 'updateDescription', // Listener untuk CKEditor
+        'updateDescription' => 'setDescription', // Listener untuk CKEditor
     ];
     
 
@@ -32,6 +32,8 @@ class Products extends Component
 
     public $isEdit = false;
 
+    public $isAdd = true;
+
     public $title = 'Add New Product';
 
     protected $paginationTheme = 'bootstrap';
@@ -43,26 +45,37 @@ class Products extends Component
         $this->reset('name', 'description');
 
         $this->isEdit = false;
+
+        $this->isAdd = true;
     }
+
+
+public function setDescription($value)
+{
+    $this->description = $value;
+}
 
     public function save()
 {
+    // Validasi input
     $this->validate([
         'name' => 'required',
         'description' => 'required',
     ]);
 
+    // Menyimpan atau memperbarui produk
     Product::updateOrCreate(['id' => $this->product_id], [
         'name' => $this->name,
         'description' => $this->description,
     ]);
 
+    // Menampilkan pesan sukses
     session()->flash('success', $this->product_id ? 'Product updated!' : 'Product created!');
 
-    // Emit untuk mereset editor setelah menyimpan
-    $this->emit('resetFields');
-    $this->resetFields();
+    // Mereset properti form tanpa emit
+    $this->reset(['name', 'description', 'product_id']);
 }
+
 
 
     public function edit($id)
@@ -78,6 +91,7 @@ class Products extends Component
         $this->description = $product->description;
 
         $this->isEdit = true;
+        $this->isAdd = false;
     }
 
     public function cancel()
