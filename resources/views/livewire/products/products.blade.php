@@ -11,7 +11,7 @@
             </script>
         @endif
 
-        @include('livewire.updateOrCreate')
+        @include('livewire.products.updateOrCreate')
 
         <div class="card">
             <div class="card-header">Product List</div>

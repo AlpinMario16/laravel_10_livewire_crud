@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\kategoris;
 
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Product;
+use App\Models\kategori;
 
-class Products extends Component
+class kategoris extends Component
 {
     use WithPagination;
 
@@ -22,7 +22,7 @@ class Products extends Component
 
 
     #[Locked]
-    public $product_id;
+    public $kategori_id;
 
     #[Validate('required')]
     public $name = '';
@@ -34,13 +34,13 @@ class Products extends Component
 
     public $isAdd = true;
 
-    public $title = 'Add New Product';
+    public $title = 'Add New kategori';
 
     protected $paginationTheme = 'bootstrap';
 
     public function resetFields()
     {
-        $this->title = 'Add New Product';
+        $this->title = 'Add New kategori';
 
         $this->reset('name', 'description');
 
@@ -48,6 +48,12 @@ class Products extends Component
 
         $this->isAdd = true;
     }
+
+    public function index()
+{
+    return view('livewire.kategori'); // Mengarahkan ke resources/views/livewire/kategori.blade.php
+}
+
 
 
 public function setDescription($value)
@@ -64,31 +70,31 @@ public function setDescription($value)
     ]);
 
     // Menyimpan atau memperbarui produk
-    Product::updateOrCreate(['id' => $this->product_id], [
+    kategori::updateOrCreate(['id' => $this->kategori_id], [
         'name' => $this->name,
         'description' => $this->description,
     ]);
 
     // Menampilkan pesan sukses
-    session()->flash('success', $this->product_id ? 'Product updated!' : 'Product created!');
+    session()->flash('success', $this->kategori_id ? 'kategori updated!' : 'kategori created!');
 
     // Mereset properti form tanpa emit
-    $this->reset(['name', 'description', 'product_id']);
+    $this->reset(['name', 'description', 'kategori_id']);
 }
 
 
 
     public function edit($id)
     {
-        $this->title = 'Edit Product';
+        $this->title = 'Edit kategori';
 
-        $product = Product::findOrFail($id);
+        $kategori = kategori::findOrFail($id);
 
-        $this->product_id = $id;
+        $this->kategori_id = $id;
 
-        $this->name = $product->name;
+        $this->name = $kategori->name;
 
-        $this->description = $product->description;
+        $this->description = $kategori->description;
 
         $this->isEdit = true;
         $this->isAdd = false;
@@ -107,9 +113,9 @@ public function setDescription($value)
 
 public function delete($id)
 {
-    Product::find($id)->delete();
+    kategori::find($id)->delete();
 
-    session()->flash('success', 'Product has been deleted.');
+    session()->flash('success', 'kategori has been deleted.');
 }
 
 
@@ -125,13 +131,13 @@ public function delete($id)
 
     public function render()
 {
-    $products = Product::where('name', 'like', '%' . $this->searchTerm . '%')
+    $kategoris = kategori::where('name', 'like', '%' . $this->searchTerm . '%')
                         ->orWhere('description', 'like', '%' . $this->searchTerm . '%')
                         ->paginate(5);
 
-    return view('livewire.products', [
-        'products' => $products,
-    ]);
+                        return view('livewire.kategoris.kategoris', [
+                            'kategoris' => $kategoris,
+                        ]);
 }
 
 }

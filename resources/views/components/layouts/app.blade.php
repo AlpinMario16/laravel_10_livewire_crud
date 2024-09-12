@@ -22,6 +22,7 @@
 
     </head>
     <body>
+    <livewire:navbar />
         <div class="container">
             <h3 class="mt-3">Laravel 10 Livewire CRUD Application Tutorial - <a href="https://www.allphptricks.com/">AllPHPTricks.com</a></h3>
             

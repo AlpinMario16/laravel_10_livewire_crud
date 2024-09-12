@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Livewire\Products;
+use App\Livewire\Products\Products;
+use App\Livewire\Kategoris\Kategoris;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +17,11 @@ use App\Livewire\Products;
 
 
 Route::get('/', function () {
+
     return view('welcome');
+
 });
+Route::get('/products', Products::class)->name('products');
+Route::get('/kategoris', Kategoris::class)->name("kategoris");
 
 Route::get('/products', Products::class);
