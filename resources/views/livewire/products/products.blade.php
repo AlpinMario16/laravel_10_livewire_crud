@@ -50,7 +50,7 @@
                                     
                     <button 
          
-                          @click="deleteConfirmed({{ $product->id }})" wire:click="deleteConfirmed({{ $product->id }})" class="btn btn-danger btn-sm">
+                          @click="deleteConfirmed({{ $product->id }})" wire:click="delete({{ $product->id }})" class="btn btn-danger btn-sm">
                         <i class="bi bi-trash"></i> Delete
                     </button>
 

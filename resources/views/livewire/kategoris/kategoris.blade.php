@@ -32,7 +32,6 @@
                       <tr>
                         <th scope="col">S#</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Description</th>
                         <th scope="col">Action</th>
                       </tr>
                     </thead>
@@ -41,7 +40,6 @@
                             <tr wire:key="{{ $kategori->id }}">
                                 <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $kategori->name }}</td>
-                                <td>{!! $kategori->description !!}</td> <!-- Support untuk konten HTML -->
                                 <td>
                                     <button wire:click="edit({{ $kategori->id }})" class="btn btn-primary btn-sm">
                                         <i class="bi bi-pencil-square"></i> Edit
@@ -49,8 +47,7 @@
 
                                     
                     <button 
-         
-                          @click="deleteConfirmed({{ $kategori->id }})" wire:click="deleteConfirmed({{ $kategori->id }})" class="btn btn-danger btn-sm">
+                          @click="deleteConfirmed({{ $kategori->id }})" wire:click="delete({{ $kategori->id }})" class="btn btn-danger btn-sm">
                         <i class="bi bi-trash"></i> Delete
                     </button>
 

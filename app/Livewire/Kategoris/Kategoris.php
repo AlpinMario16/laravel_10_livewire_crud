@@ -16,7 +16,6 @@ class kategoris extends Component
 
     protected $listeners = [
         'deleteConfirmed' => 'delete',
-        'updateDescription' => 'setDescription', // Listener untuk CKEditor
     ];
     
 
@@ -26,9 +25,6 @@ class kategoris extends Component
 
     #[Validate('required')]
     public $name = '';
-
-    #[Validate('required')]
-    public $description = '';
 
     public $isEdit = false;
 
@@ -42,7 +38,7 @@ class kategoris extends Component
     {
         $this->title = 'Add New kategori';
 
-        $this->reset('name', 'description');
+        $this->reset('name');
 
         $this->isEdit = false;
 
@@ -56,30 +52,24 @@ class kategoris extends Component
 
 
 
-public function setDescription($value)
-{
-    $this->description = $value;
-}
 
     public function save()
 {
     // Validasi input
     $this->validate([
-        'name' => 'required',
-        'description' => 'required',
+        'name' => 'required'
     ]);
 
     // Menyimpan atau memperbarui produk
     kategori::updateOrCreate(['id' => $this->kategori_id], [
-        'name' => $this->name,
-        'description' => $this->description,
+        'name' => $this->name
     ]);
 
     // Menampilkan pesan sukses
     session()->flash('success', $this->kategori_id ? 'kategori updated!' : 'kategori created!');
 
     // Mereset properti form tanpa emit
-    $this->reset(['name', 'description', 'kategori_id']);
+    $this->reset(['name', 'kategori_id']);
 }
 
 
@@ -93,8 +83,6 @@ public function setDescription($value)
         $this->kategori_id = $id;
 
         $this->name = $kategori->name;
-
-        $this->description = $kategori->description;
 
         $this->isEdit = true;
         $this->isAdd = false;
@@ -124,15 +112,9 @@ public function delete($id)
         $this->resetPage();
     }
 
-    public function updateDescription($value)
-    {
-        $this->description = $value; // Update deskripsi dari CKEditor
-    }
-
     public function render()
 {
     $kategoris = kategori::where('name', 'like', '%' . $this->searchTerm . '%')
-                        ->orWhere('description', 'like', '%' . $this->searchTerm . '%')
                         ->paginate(5);
 
                         return view('livewire.kategoris.kategoris', [
