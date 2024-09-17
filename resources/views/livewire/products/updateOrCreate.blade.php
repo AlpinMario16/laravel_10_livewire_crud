@@ -26,7 +26,7 @@
                 <form @submit.prevent="isProcessing = true; $wire.save().then(() => isProcessing = false)">
                     
                     <div class="mb-3 row">
-                        <label for="name" class="col-md-4 col-form-label text-md-end text-start">Product Name</label>
+                        <label for="name" class="col-md-4 col-form-label text-md-end text-start">Product Name :</label>
                         <div class="col-md-6">
                             <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" wire:model="name">
                             @if ($errors->has('name'))
@@ -34,20 +34,9 @@
                             @endif
                         </div>
                     </div>
-
-                    <div class="mb-3 row" wire:ignore>
-                        <label for="description" class="col-md-4 col-form-label text-md-end text-start">Product Description</label>
-                        <div class="col-md-6">
-                        <textarea   
-                        class="form-control @error('description') is-invalid @enderror" id="description" wire:model.defer="description"></textarea>
-                            @if ($errors->has('description'))
-                                <span class="text-danger">{{ $errors->first('description') }}</span>
-                            @endif
-                        </div>
-                    </div>
-
+                    
                     <div class="mb-3 row">
-                        <label for="kategori_id" class="col-md-4 col-form-label text-md-end text-start">Product Name</label>
+                        <label for="kategori_id" class="col-md-4 col-form-label text-md-end text-start">Product Kategori :</label>
                         <div class="col-md-6">
                             <select class="form-control" id="kategori_id" wire:model="kategori_id">
                                 <option value="">-- Pilih Kategori --</option>
@@ -58,6 +47,25 @@
                             @error('kategori_id') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                     </div>
+                    <div class="mb-3 row" wire:ignore>
+                        <label for="description" class="col-md-4 col-form-label text-md-end text-start">Product Description :</label>
+                        <div class="col-md-6">
+                        <textarea   
+                        class="form-control @error('description') is-invalid @enderror" id="description" wire:model.defer="description"></textarea>
+                            @if ($errors->has('description'))
+                                <span class="text-danger">{{ $errors->first('description') }}</span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label for="price" class="col-md-4 col-form-label text-md-end text-start">Product Price :</label>
+                        <div class="col-md-6">
+                            <input type="number" class="form-control" id="price" wire:model="price" placeholder="Enter product price">
+                            @error('price') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+
 
                     <div class="mb-3 row">
                         <button type="submit" class="col-md-3 offset-md-5 btn btn-success" :disabled="isProcessing">

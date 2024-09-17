@@ -24,6 +24,8 @@ class Products extends Component
 
     public $kategori_id;
 
+    public $price = 0.00; // default value
+
     #[Locked]
     public $product_id;
 
@@ -51,7 +53,14 @@ class Products extends Component
 
         $this->isAdd = true;
     }
-
+    public function resetForm()
+    {
+        $this->name = '';
+        $this->kategori_id = '';
+        $this->description = '';
+        $this->price = '';
+    }
+    
     public function index()
 {
     return view('livewire.product'); // Mengarahkan ke resources/views/livewire/product.blade.php
@@ -73,14 +82,16 @@ public function save()
 {
     $this->validate([
         'name' => 'required',
-        'kategori_id' => 'required',  // Validasi kategori
+        'kategori_id' => 'required',
         'description' => 'required',
+        'price' => 'required|numeric|min:0',
     ]);
 
     Product::updateOrCreate(['id' => $this->product_id], [
         'name' => $this->name,
-        'kategori_id' => $this->kategori_id,  // Simpan kategori
+        'kategori_id' => $this->kategori_id,
         'description' => $this->description,
+        'price' => $this->price, // Menyimpan harga produk
     ]);
 
     session()->flash('success', 'Product saved!');
