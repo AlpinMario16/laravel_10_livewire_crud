@@ -25,6 +25,7 @@
             <div class="card-body">
                 <form @submit.prevent="isProcessing = true; $wire.save().then(() => { isProcessing = false; success(); })">
 
+                    <!-- Kategori Name -->
                     <div class="mb-3 row">
                         <label for="name" class="col-md-4 col-form-label text-md-end text-start">Kategori Name</label>
                         <div class="col-md-6">
@@ -35,43 +36,49 @@
                         </div>
                     </div>
 
+                    <!-- Input Add More (diletakkan di bawah Kategori Name) -->
+                    <template x-for="(input, index) in inputs" :key="index">
+                        <div class="mb-3 row">
+                            <div class="col-md-6 offset-md-4">
+                                <input type="text" class="form-control" x-model="input.name" wire:model.defer="inputs[index].name" placeholder="Enter name">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-danger" @click="inputs.splice(index, 1)">
+                                    Hapus
+                                </button>
+                            </div>
+                        </div>
+                    </template>
+
+
                     <div class="mb-3 row">
-                        <button type="submit" class="col-md-3 offset-md-5 btn btn-success" :disabled="isProcessing">
+                        <button type="button" class="col-md-3 offset-md-4 btn btn-primary" @click="inputs.push({ name: '' })">
+                            Add More
+                        </button>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <button type="submit" class="col-md-3 offset-md-4 btn btn-success" :disabled="isProcessing">
                             Simpan
                         </button>
                     </div>
 
                     @if($isEdit)
                         <div class="mb-3 row">
-                            <button @click="showForm = false" wire:click="cancel" class="col-md-3 offset-md-5 btn btn-danger">
+                            <button @click="showForm = false" wire:click="cancel" class="col-md-3 offset-md-4 btn btn-danger">
                                 Cancel
                             </button>
                         </div>
                     @endif
 
-                    <!-- Tombol Add More -->
-                    @if($isAdd)
-                        <div class="mb-3 row">
-                            <button type="button" class="col-md-3 offset-md-5 btn btn-primary" @click="inputs.push({ name: '' })">
-                                Add More
-                            </button>
-                        </div>
-
-                        <template x-for="(input, index) in inputs" :key="index">
-                            <div class="mb-3 row">
-                                <input type="text" class="form-control" x-model="input.name" placeholder="Enter name">
-                            </div>
-                        </template>
-                    @endif
-
                     <div class="mb-3 row">
-                        <span x-show="isProcessing" class="col-md-3 offset-md-5 text-primary">Processing...</span>
+                        <span x-show="isProcessing" class="col-md-3 offset-md-4 text-primary">Processing...</span>
                     </div>
                     
                 </form>
             </div>
         </div>
-    </div>    
+    </div>
 </div>
 
 <script>
@@ -97,7 +104,7 @@
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                console.log('deleteConfirmed', id)
+                console.log('deleteConfirmed', id);
                 Swal.fire({
                     title: "Deleted!",
                     text: "Your file has been deleted.",

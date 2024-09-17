@@ -20,7 +20,9 @@ class Products extends Component
         'updateDescription' => 'setDescription', // Listener untuk CKEditor
     ];
     
+    
 
+    public $kategori_id;
 
     #[Locked]
     public $product_id;
@@ -56,31 +58,33 @@ class Products extends Component
 }
 
 
+public function kategori()
+{
+    return $this->belongsTo(Kategori::class, 'kategori_id');
+}
+
 
 public function setDescription($value)
 {
     $this->description = $value;
 }
 
-    public function save()
+public function save()
 {
-    // Validasi input
     $this->validate([
         'name' => 'required',
+        'kategori_id' => 'required',  // Validasi kategori
         'description' => 'required',
     ]);
 
-    // Menyimpan atau memperbarui produk
     Product::updateOrCreate(['id' => $this->product_id], [
         'name' => $this->name,
+        'kategori_id' => $this->kategori_id,  // Simpan kategori
         'description' => $this->description,
     ]);
 
-    // Menampilkan pesan sukses
-    session()->flash('success', $this->product_id ? 'Product updated!' : 'Product created!');
-
-    // Mereset properti form tanpa emit
-    $this->reset(['name', 'description', 'product_id']);
+    session()->flash('success', 'Product saved!');
+    $this->resetForm();
 }
 
 
@@ -136,9 +140,13 @@ public function delete($id)
                         ->orWhere('description', 'like', '%' . $this->searchTerm . '%')
                         ->paginate(5);
 
-                        return view('livewire.products.products', [
-                            'products' => $products,
-                        ]);
+    $kategoris = Kategori::all(); // Ambil semua kategori dari model Kategori
+
+    return view('livewire.products.products', [
+        'products' => $products,
+        'kategoris' => $kategoris,  // Kirim data kategori ke view
+    ]);
 }
+
 
 }

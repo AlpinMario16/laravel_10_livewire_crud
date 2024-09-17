@@ -14,6 +14,10 @@ class kategoris extends Component
 
     public $searchTerm;
 
+    public $extraCategories = [];
+
+    public $inputs = [];
+
     protected $listeners = [
         'deleteConfirmed' => 'delete',
     ];
@@ -51,27 +55,40 @@ class kategoris extends Component
 }
 
 
-
-
+public function addMore()
+    {
+        $this->extraCategories[] = ['name' => '']; // Tambah input baru ke array
+    }
     public function save()
-{
-    // Validasi input
-    $this->validate([
-        'name' => 'required'
-    ]);
-
-    // Menyimpan atau memperbarui produk
-    kategori::updateOrCreate(['id' => $this->kategori_id], [
-        'name' => $this->name
-    ]);
-
-    // Menampilkan pesan sukses
-    session()->flash('success', $this->kategori_id ? 'kategori updated!' : 'kategori created!');
-
-    // Mereset properti form tanpa emit
-    $this->reset(['name', 'kategori_id']);
-}
-
+    {
+        // Validasi input dasar
+        $this->validate([
+            'name' => 'required',  // Validasi untuk field name
+            'inputs.*.name' => 'required', // Validasi untuk setiap input dalam array inputs
+        ]);
+    
+        // Menyimpan atau memperbarui kategori utama
+        $kategori = kategori::updateOrCreate(['id' => $this->kategori_id], [
+            'name' => $this->name
+        ]);
+    
+        // Jika ada inputs tambahan yang ditambahkan menggunakan Add More, simpan ke database
+        foreach ($this->inputs as $input) {
+            // Sesuaikan logika ini jika kamu ingin menyimpan input ke tabel yang terpisah
+            // Misalnya menyimpan ke tabel terkait dengan kategori yang sama
+            kategori::create([
+                'kategori_id' => $kategori->id,  // Hubungkan dengan kategori utama yang baru saja disimpan
+                'name' => $input['name']  // Simpan nama dari input Add More
+            ]);
+        }
+    
+        // Menampilkan pesan sukses
+        session()->flash('success', $this->kategori_id ? 'Kategori updated!' : 'Kategori created!');
+    
+        // Mereset form tanpa emit
+        $this->reset(['name', 'inputs', 'kategori_id']);
+    }
+    
 
 
     public function edit($id)

@@ -32,6 +32,7 @@
                       <tr>
                         <th scope="col">S#</th>
                         <th scope="col">Name</th>
+                        <th scope="col">kategori</th>
                         <th scope="col">Description</th>
                         <th scope="col">Action</th>
                       </tr>
@@ -41,6 +42,7 @@
                             <tr wire:key="{{ $product->id }}">
                                 <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $product->name }}</td>
+                                <td>{{ $product->kategori->name ?? 'No Kategori' }}</td> <!-- Menampilkan nama kategori -->
                                 <td>{!! $product->description !!}</td> <!-- Support untuk konten HTML -->
                                 <td>
                                     <button wire:click="edit({{ $product->id }})" class="btn btn-primary btn-sm">

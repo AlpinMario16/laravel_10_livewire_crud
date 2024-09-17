@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Products\Products;
 use App\Livewire\Kategoris\Kategoris;
+use App\Livewire\Transaksi\TransaksiForm;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,5 +24,7 @@ Route::get('/', function () {
 });
 Route::get('/products', Products::class)->name('products');
 Route::get('/kategoris', Kategoris::class)->name("kategoris");
+Route::get('/transaksi', TransaksiForm::class)->name("transaksi-form");
+
 
 Route::get('/products', Products::class);

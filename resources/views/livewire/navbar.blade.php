@@ -9,13 +9,13 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
       <li class="nav-item">
-          <a class="nav-link" href="#">Products</a>
+          <a class="nav-link" href="">Products</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{{ route('kategoris') }}">Kategori</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Transaksi</a>
+          <a class="nav-link" href="{{ route('transaksi-form') }}">Transaksi</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Detail Transaksi</a>

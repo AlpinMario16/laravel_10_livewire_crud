@@ -47,6 +47,19 @@
                     </div>
 
                     <div class="mb-3 row">
+                        <label for="kategori_id" class="col-md-4 col-form-label text-md-end text-start">Product Name</label>
+                        <div class="col-md-6">
+                            <select class="form-control" id="kategori_id" wire:model="kategori_id">
+                                <option value="">-- Pilih Kategori --</option>
+                                @foreach($kategoris as $kategori)
+                                    <option value="{{ $kategori->id }}">{{ $kategori->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('kategori_id') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
                         <button type="submit" class="col-md-3 offset-md-5 btn btn-success" :disabled="isProcessing">
                             Simpan
                         </button>
