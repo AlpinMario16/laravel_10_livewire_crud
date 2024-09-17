@@ -22,7 +22,7 @@ Route::get('/', function () {
     return view('welcome');
 
 });
-Route::get('/products', Products::class)->name('products');
+Route::get('/product', Products::class)->name("products");
 Route::get('/kategoris', Kategoris::class)->name("kategoris");
 Route::get('/transaksi', TransaksiForm::class)->name("transaksi-form");
 
