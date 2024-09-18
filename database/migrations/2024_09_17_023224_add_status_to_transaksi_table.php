@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->date('tanggal');
             $table->integer('total_harga');
+            $table->string('invoice')->unique();  // Untuk menyimpan nomor invoice
+            $table->string('customer_name');      // Untuk menyimpan nama customer
             $table->timestamps();
         });
         

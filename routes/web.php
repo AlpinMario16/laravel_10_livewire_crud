@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\Products\Products;
 use App\Livewire\Kategoris\Kategoris;
 use App\Livewire\Transaksi\TransaksiForm;
+use App\Livewire\Transaksi\LaporanTransaksi;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,7 @@ Route::get('/', function () {
 Route::get('/product', Products::class)->name("products");
 Route::get('/kategoris', Kategoris::class)->name("kategoris");
 Route::get('/transaksi', TransaksiForm::class)->name("transaksi-form");
+Route::get('/laporan-transaksi', LaporanTransaksi::class)->name("laporan.transaksi");
 
 
 Route::get('/products', Products::class);

@@ -18,7 +18,7 @@
           <a class="nav-link" href="{{ route('transaksi-form') }}">Transaksi</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Detail Transaksi</a>
+          <a class="nav-link" href="{{ route('laporan.transaksi') }}">Laporan Transaksi</a>
         </li>
       </ul>
     </div>
