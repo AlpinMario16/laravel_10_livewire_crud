@@ -28,10 +28,13 @@
 <body>
     <div class="container">
         <h2>Detail Transaksi</h2>
-        <p>ID Transaksi: {{ $transaction->id }}</p>
-        <p>Nama Customer: {{ $transaction->customer_name }}</p>
-        <p>Tanggal: {{ $transaction->tanggal->format('d-m-Y H:i') }}</p>
-
+        <p>ID Transaksi : {{ $transaction->id }}</p>
+        <p>Nama Customer : {{ $transaction->customer_name }}</p>
+        <p>Tanggal : @if($transaction->tanggal)
+                            {{ \Carbon\Carbon::parse($transaction->tanggal)->format('d-m-Y H:i') }}
+                        @else
+                            -
+                        @endif
         <!-- Detail Produk -->
         <table class="table">
             <thead>

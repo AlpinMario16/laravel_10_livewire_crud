@@ -3,102 +3,62 @@
 namespace App\Livewire\Products;
 
 use App\Models\Kategori;
-use Livewire\Attributes\Locked;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Product;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage; // Tambahkan ini
 
 class Products extends Component
 {
-    use WithPagination;
+    use WithFileUploads, WithPagination;
 
-    public $searchTerm;
+    public $searchTerm, $kategori_id, $price = 0.00, $product_id, $name = '', $description = '', $image;
+    public $isEdit = false, $isAdd = true, $title = 'Add New Product';
+
+    protected $paginationTheme = 'bootstrap';
 
     protected $listeners = [
         'deleteConfirmed' => 'delete',
         'updateDescription' => 'setDescription', // Listener untuk CKEditor
     ];
-    
-    
-
-    public $kategori_id;
-
-    public $price = 0.00; // default value
-
-    #[Locked]
-    public $product_id;
-
-    #[Validate('required')]
-    public $name = '';
-
-    #[Validate('required')]
-    public $description = '';
-
-    public $isEdit = false;
-
-    public $isAdd = true;
-
-    public $title = 'Add New Product';
-
-    protected $paginationTheme = 'bootstrap';
 
     public function resetFields()
     {
+        $this->reset(['name', 'description', 'price', 'kategori_id', 'image']);
         $this->title = 'Add New Product';
-
-        $this->reset('name', 'description');
-
         $this->isEdit = false;
-
         $this->isAdd = true;
     }
-    public function resetForm()
+
+    public function setDescription($value)
     {
-        $this->name = '';
-        $this->kategori_id = '';
-        $this->description = '';
-        $this->price = '';
+        $this->description = $value;
     }
-    
-    public function index()
-{
-    return view('livewire.product'); // Mengarahkan ke resources/views/livewire/product.blade.php
-}
 
+    public function save()
+    {
+        $this->validate([
+            'name' => 'required',
+            'kategori_id' => 'required',
+            'price' => 'required|numeric',
+            'image' => 'nullable|image|max:1024', // Validasi gambar
+        ]);
 
-public function kategori()
-{
-    return $this->belongsTo(Kategori::class, 'kategori_id');
-}
+        // Upload gambar jika ada
+        $imageName = $this->image ? $this->image->store('products', 'public') : null;
 
+        Product::create([
+            'name' => $this->name,
+            'kategori_id' => $this->kategori_id,
+            'description' => $this->description,
+            'price' => $this->price,
+            'image' => $imageName,
+        ]);
 
-public function setDescription($value)
-{
-    $this->description = $value;
-}
-
-public function save()
-{
-    $this->validate([
-        'name' => 'required',
-        'kategori_id' => 'required',
-        'description' => 'required',
-        'price' => 'required|numeric|min:0',
-    ]);
-
-    Product::updateOrCreate(['id' => $this->product_id], [
-        'name' => $this->name,
-        'kategori_id' => $this->kategori_id,
-        'description' => $this->description,
-        'price' => $this->price, // Menyimpan harga produk
-    ]);
-
-    session()->flash('success', 'Product saved!');
-    $this->resetForm();
-}
-
-
+        session()->flash('success', 'Produk berhasil ditambahkan!');
+        $this->resetFields(); // Reset form setelah simpan
+    }
 
     public function edit($id)
     {
@@ -107,57 +67,75 @@ public function save()
         $product = Product::findOrFail($id);
 
         $this->product_id = $id;
-
         $this->name = $product->name;
-
         $this->description = $product->description;
+        $this->price = $product->price;
+        $this->kategori_id = $product->kategori_id;
 
         $this->isEdit = true;
         $this->isAdd = false;
     }
 
-    public function cancel()
+    public function update()
     {
+        $this->validate([
+            'name' => 'required',
+            'kategori_id' => 'required',
+            'price' => 'required|numeric',
+            'image' => 'nullable|image|max:1024', // Validasi gambar
+        ]);
+
+        $product = Product::findOrFail($this->product_id);
+
+        // Upload gambar baru jika ada
+        if ($this->image) {
+            $imageName = $this->image->store('products', 'public');
+        } else {
+            $imageName = $product->image;
+        }
+
+        $product->update([
+            'name' => $this->name,
+            'kategori_id' => $this->kategori_id,
+            'description' => $this->description,
+            'price' => $this->price,
+            'image' => $imageName,
+        ]);
+
+        session()->flash('success', 'Produk berhasil diupdate!');
         $this->resetFields();
     }
 
-    public function deleteConfirmed($id)
-{
-    // Panggil method delete untuk menghapus produk
-    $this->delete($id);
-}
+    public function delete($id)
+    {
+        $product = Product::findOrFail($id);
 
-public function delete($id)
-{
-    Product::find($id)->delete();
+        // Hapus gambar jika ada
+        if ($product->image && Storage::exists('public/' . $product->image)) {
+            Storage::delete('public/' . $product->image);
+        }
 
-    session()->flash('success', 'Product has been deleted.');
-}
+        $product->delete();
 
+        session()->flash('success', 'Produk berhasil dihapus.');
+    }
 
     public function updatingSearch()
     {
         $this->resetPage();
     }
 
-    public function updateDescription($value)
-    {
-        $this->description = $value; // Update deskripsi dari CKEditor
-    }
-
     public function render()
-{
-    $products = Product::where('name', 'like', '%' . $this->searchTerm . '%')
-                        ->orWhere('description', 'like', '%' . $this->searchTerm . '%')
-                        ->paginate(5);
+    {
+        $products = Product::where('name', 'like', '%' . $this->searchTerm . '%')
+                            ->orWhere('description', 'like', '%' . $this->searchTerm . '%')
+                            ->paginate(5);
 
-    $kategoris = Kategori::all(); // Ambil semua kategori dari model Kategori
+        $kategoris = Kategori::all(); // Ambil semua kategori dari model Kategori
 
-    return view('livewire.products.products', [
-        'products' => $products,
-        'kategoris' => $kategoris,  // Kirim data kategori ke view
-    ]);
-}
-
-
+        return view('livewire.products.products', [
+            'products' => $products,
+            'kategoris' => $kategoris,
+        ]);
+    }
 }

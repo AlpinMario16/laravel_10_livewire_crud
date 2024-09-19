@@ -35,6 +35,7 @@
                         <th scope="col">kategori</th>
                         <th scope="col">Description</th>
                         <th scope="col">Harga</th>
+                        <th scope="col">Gambar</th>
                         <th scope="col">Action</th>
                       </tr>
                     </thead>
@@ -46,6 +47,14 @@
                                 <td>{{ $product->kategori->name ?? 'No Kategori' }}</td> <!-- Menampilkan nama kategori -->
                                 <td>{!! $product->description !!}</td>
                                 <td>{{ $product->price }}</td> <!-- Support untuk konten HTML -->
+                                <td>
+                                @if ($product->image)
+                                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" width="100">
+                                    @else
+                                        <p>Gambar tidak tersedia.</p>
+                                    @endif
+
+                                </td>
                                 <td>
                                     <button wire:click="edit({{ $product->id }})" class="btn btn-primary btn-sm">
                                         <i class="bi bi-pencil-square"></i> Edit

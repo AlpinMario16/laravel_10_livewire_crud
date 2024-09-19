@@ -66,6 +66,17 @@
                         </div>
                     </div>
 
+                        <!-- Tambahkan input file untuk gambar -->
+                        <div class="mb-3 row">
+                        <label for="image" class="col-md-4 col-form-label text-md-end text-start">Image :</label>
+                        <div class="col-md-6">
+                        <input type="file" wire:model="image" id="image" class="form-control">
+                        @if($image)
+                            <img src="{{ $image->temporaryUrl() }}" width="100" class="mt-2" alt="Preview Image">
+                        @endif
+                    </div>
+                        </div>
+
 
                     <div class="mb-3 row">
                         <button type="submit" class="col-md-3 offset-md-5 btn btn-success" :disabled="isProcessing">
@@ -100,6 +111,7 @@
     </div>    
 </div>
 <!-- Tambahkan skrip CKEditor -->
+ 
 <script>    
 document.addEventListener('DOMContentLoaded', function() {
     const descriptionElement = document.querySelector('#description');
@@ -139,22 +151,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function deleteConfirmed(id) {
         Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                console.log('deleteConfirmed', id)
-                Swal.fire({
-                    title: "Deleted!",
-                    text: "Your file has been deleted.",
+            title: "Deleted!",
+                    text: "Produk berhasil Dihapus.",
                     icon: "success"
-                });
-            }
+
         });
     }
 </script>

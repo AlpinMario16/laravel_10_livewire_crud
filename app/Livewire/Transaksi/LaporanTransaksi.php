@@ -4,7 +4,7 @@ namespace App\Livewire\Transaksi;
 use App\Models\Transaksi;
 use Livewire\Component;
 use Livewire\WithPagination;
-// use PDF;
+use PDF;
 
 class LaporanTransaksi extends Component
 {
@@ -23,17 +23,19 @@ class LaporanTransaksi extends Component
         ]);
     }
 
-    // public function printTransaction($transactionId)
-    // {
-    //     // Mengambil data transaksi berdasarkan ID
-    //     $transaction = Transaksi::with('detailTransaksi')->findOrFail($transactionId);
+    public function printTransaction($transactionId)
+    {
+        // Mengambil data transaksi berdasarkan ID
+        $transaction = Transaksi::with('detailTransaksi')->findOrFail($transactionId);
 
-    //     // Membuat file PDF transaksi
-    //     // $pdf = PDF::loadView('livewire.transaksi.cetak-transaksi', ['transaction' => $transaction]);
-
-    //     // Emit event untuk mencetak PDF di browser
-    //     // $this->dispatchBrowserEvent('printTransaction', [
-    //     //     'url' => $pdf->stream('transaksi_'.$transactionId.'.pdf')
-    //     // ]);
-    // }
+    
+        // Membuat file PDF transaksi
+        $pdf = PDF::loadView('livewire.transaksi.cetak-transaksi', ['transaction' => $transaction]);
+    
+        // Emit event untuk mencetak PDF di browser
+        $this->dispatchBrowserEvent('printTransaction', [
+            'url' => $pdf->stream('transaksi_'.$transactionId.'.pdf')
+        ]);
+    }
+    
 }

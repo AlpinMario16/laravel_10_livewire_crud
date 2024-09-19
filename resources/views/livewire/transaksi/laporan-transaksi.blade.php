@@ -23,7 +23,13 @@
                 <tr>
                     <td>{{ $transaction->id }}</td>
                     <td>{{ $transaction->customer_name }}</td>
-                    <td>{{ $transaction->tanggal->format('d-m-Y H:i') }}</td>
+                    <td>
+                        @if($transaction->tanggal)
+                            {{ \Carbon\Carbon::parse($transaction->tanggal)->format('d-m-Y H:i') }}
+                        @else
+                            -
+                        @endif
+                    </td>
                     <td>Rp {{ number_format($transaction->total_harga, 0, ',', '.') }}</td>
                     <td>
                         <button class="btn btn-info" wire:click="printTransaction({{ $transaction->id }})">Cetak</button>
