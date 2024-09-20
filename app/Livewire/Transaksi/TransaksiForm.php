@@ -15,7 +15,6 @@ class TransaksiForm extends Component
     public $customerName; // Nama customer
     public $jml_bayar = 0; // Jumlah bayar yang diinput
     public $kembalian = 0; // Kembalian yang dihitung
-
     public function mount()
     {
         // Mengambil semua produk dari database
@@ -29,13 +28,14 @@ class TransaksiForm extends Component
         $this->totalHarga = 0;
     }
 
+    
     public function addToCart($productId)
     {
         $product = Product::find($productId);
-
+        
         // Cek apakah produk sudah ada di dalam keranjang
         $index = array_search($productId, array_column($this->cart, 'product_id'));
-
+        
         if ($index !== false) {
             // Jika produk sudah ada di keranjang, tambahkan jumlahnya
             $this->cart[$index]['jumlah']++;
@@ -50,29 +50,52 @@ class TransaksiForm extends Component
                 'subtotal' => $product->price
             ];
         }
-
+        
         // Update total harga
         $this->updateTotal();
     }
-
+    
     public function updateTotal()
     {
         // Menghitung total harga keranjang
         $this->totalHarga = array_sum(array_column($this->cart, 'subtotal'));
-
+        
         // Hitung kembalian setelah update total harga
         $this->calculateKembalian();
-    }
 
-    public function calculateKembalian()
+    }
+    
+    public function deleteProductFromCart($productId)
     {
-        // Menghitung kembalian jika jumlah bayar lebih besar dari total harga
-        if ($this->jml_bayar >= $this->totalHarga) {
-            $this->kembalian = $this->jml_bayar - $this->totalHarga;
-        } else {
-            $this->kembalian = 0;
+        // Mencari produk di keranjang berdasarkan ID
+        $index = array_search($productId, array_column($this->cart, 'product_id'));
+        
+        if ($index !== false) {
+            // Hapus produk dari keranjang
+            unset($this->cart[$index]);
+            
+            // Reindex array setelah item dihapus
+            $this->cart = array_values($this->cart);
+            
+            // Update total harga setelah penghapusan
+            $this->updateTotal();
         }
     }
+    public function updatedJmlBayar($value)
+{
+    $this->calculateKembalian();
+}
+
+public function calculateKembalian()
+{
+    // Menghitung kembalian jika jumlah bayar lebih besar dari atau sama dengan total harga
+    if ($this->jml_bayar >= $this->totalHarga) {
+        $this->kembalian = $this->jml_bayar - $this->totalHarga;
+    } else {
+        $this->kembalian = 0;
+    }
+}
+
 
     public function processTransaction()
     {

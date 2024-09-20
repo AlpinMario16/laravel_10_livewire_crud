@@ -77,7 +77,8 @@
                                 <td>Rp {{ number_format($item['subtotal'], 0, ',', '.') }}</td>
                                 <td>
                     <!-- Tombol delete -->
-                    <button class="btn btn-danger">Hapus</button>
+                    <button @click="deleteConfirmed({{ $product->id }})" class="btn btn-danger" wire:click="deleteProductFromCart({{ $item['product_id'] }})">Hapus</button>
+
                 </td>
                             </tr>
                         @endforeach
@@ -92,11 +93,12 @@
             </div>
 
             <div class="form-group mb-3">
-                <label for="kembalian">Kembalian</label>
-                <input type="text" class="form-control" id="kembalian" value="Rp {{ number_format($kembalian, 0, ',', '.') }}" disabled>
-            </div>
+            <label for="kembalian">Kembalian</label>
+            <input type="text" class="form-control" id="kembalian" wire:model="kembalian" disabled>
+        </div>
 
-                <button class="btn btn-success" wire:click="processTransaction">Proses Transaksi</button>
+
+                <button @click="success({{ $product->id }})" class="btn btn-success" wire:click="processTransaction">Proses Transaksi</button>
             @else
                 <p>Keranjang kosong.</p>
             @endif
@@ -106,37 +108,22 @@
      <!-- </div> -->
 
 <script>
-    // SweetAlert untuk transaksi sukses
-    window.addEventListener('transactionSuccess', event => {
+     function success() {
         Swal.fire({
             position: 'center',
-            icon: 'success',
-            title: 'Transaksi berhasil!',
+            icon: "success",
+            title: "Your work has been saved",
             showConfirmButton: false,
             timer: 1500
         });
-    });
+    }
 
     // Konfirmasi penghapusan produk dari keranjang
     function deleteConfirmed(id) {
         Swal.fire({
-            title: "Apakah Anda yakin?",
-            text: "Data ini tidak bisa dikembalikan setelah dihapus!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, hapus!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Jika dikonfirmasi, jalankan logika penghapusan item
-                Livewire.emit('deleteProductFromCart', id); // Emit event untuk penghapusan item
-                Swal.fire({
-                    title: "Dihapus!",
+            title: "Dihapus!",
                     text: "Produk telah dihapus dari keranjang.",
                     icon: "success"
-                });
-            }
         });
     }
 </script>

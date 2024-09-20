@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\kategoris;
+namespace App\Livewire\Kategoris;
 
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Validate;
