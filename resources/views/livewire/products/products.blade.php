@@ -44,17 +44,20 @@
                             <tr wire:key="{{ $product->id }}">
                                 <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $product->name }}</td>
-                                <td>{{ $product->kategori->name ?? 'No Kategori' }}</td> <!-- Menampilkan nama kategori -->
-                                <td>{!! $product->description !!}</td>
+                                <td>{{ $product->kategori->name ?? 'No Kategori' }}</td>
+ <!-- Menampilkan nama kategori -->
+                                <td>{{ $product->description ?? 'Tidak ada deskripsi' }}</td>
+
                                 <td>{{ $product->price }}</td> <!-- Support untuk konten HTML -->
                                 <td>
-                                @if ($product->image)
-                                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" width="100">
-                                    @else
-                                        <p>Gambar tidak tersedia.</p>
-                                    @endif
+                                    @if($product->image)
+                                    <img src="{{ asset('storage/' . $product->image) }}" alt="Product Image" width="100">
 
+                                    @else
+                                        Gambar tidak tersedia.
+                                    @endif
                                 </td>
+
                                 <td>
                                     <button wire:click="edit({{ $product->id }})" class="btn btn-primary btn-sm">
                                         <i class="bi bi-pencil-square"></i> Edit

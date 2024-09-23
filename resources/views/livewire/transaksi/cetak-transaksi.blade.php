@@ -35,24 +35,41 @@
                         @else
                             -
                         @endif
+        </p>
+
         <!-- Detail Produk -->
         <table class="table">
             <thead>
                 <tr>
                     <th>Produk</th>
                     <th>Jumlah</th>
+                    <th>Harga</th> <!-- Tambahkan kolom harga -->
                     <th>Subtotal</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($transaction->detailTransaksi as $item)
-                    <tr>
-                        <td>{{ $item->product->name }}</td>
-                        <td>{{ $item->jumlah }}</td>
-                        <td>Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
+    @foreach($transaction->detailTransaksi as $item)
+        <tr>
+            <td>
+                @if($item->product)
+                    {{ $item->product->name }}
+                @else
+                    Produk tidak ditemukan
+                @endif
+            </td>
+            <td>{{ $item->jumlah }}</td>
+            <td>
+                @if($item->product)
+                    Rp {{ number_format($item->product->price, 0, ',', '.') }}
+                @else
+                    -
+                @endif
+            </td>
+            <td>Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
+        </tr>
+    @endforeach
+</tbody>
+
         </table>
 
         <h3>Total Harga: Rp {{ number_format($transaction->total_harga, 0, ',', '.') }}</h3>

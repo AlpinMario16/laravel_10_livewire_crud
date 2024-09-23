@@ -27,15 +27,15 @@ class LaporanTransaksi extends Component
     {
         // Mengambil data transaksi berdasarkan ID
         $transaction = Transaksi::with('detailTransaksi')->findOrFail($transactionId);
-
     
         // Membuat file PDF transaksi
         $pdf = PDF::loadView('livewire.transaksi.cetak-transaksi', ['transaction' => $transaction]);
     
-        // Emit event untuk mencetak PDF di browser
-        $this->dispatchBrowserEvent('printTransaction', [
-            'url' => $pdf->stream('transaksi_'.$transactionId.'.pdf')
-        ]);
+        // Menghasilkan file PDF untuk di-download atau ditampilkan
+        return response()->streamDownload(function() use ($pdf) {
+            echo $pdf->output();
+        }, 'transaksi_' . $transactionId . '.pdf');
     }
+    
     
 }
