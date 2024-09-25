@@ -14,7 +14,7 @@
             <form>
             <div class="form-group">
                 <label for="customerName">Nama Customer</label>
-                <input type="text" id="customerName" wire:model="customerName" class="form-control" placeholder="Masukkan Nama Customer">
+                <input type="text"  wire:model="customerName" class="form-control" placeholder="Masukkan Nama Customer">
             </div>
 
                 <div class="form-group mb-3">

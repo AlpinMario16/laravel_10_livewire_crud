@@ -97,41 +97,48 @@ public function calculateKembalian()
 }
 
 
-    public function processTransaction()
-    {
-        // Validasi apakah jumlah bayar cukup
-        if ($this->jml_bayar < $this->totalHarga) {
-            session()->flash('error', 'Jumlah bayar tidak mencukupi!');
-            return;
-        }
-
-        // Buat transaksi baru
-        $transaksi = Transaksi::create([
-            'invoice' => $this->invoice,               // Nomor invoice
-            'customer_name' => $this->customerName,    // Nama customer
-            'tanggal' => now(),              // Tanggal transaksi
-            'total_harga' => $this->totalHarga,
-        ]);
-
-        // Simpan detail transaksi  
-        foreach ($this->cart as $item) {
-            DetailTransaksi::create([
-                'transaksi_id' => $transaksi->id,
-                'product_id' => $item['product_id'],
-                'jumlah' => $item['jumlah'],
-                'subtotal' => $item['subtotal'],
-            ]);
-        }
-
-        // Tampilkan pesan sukses dan reset keranjang
-        session()->flash('success', 'Transaksi berhasil!');
-
-        // Reset semua data yang relevan setelah transaksi selesai
-        $this->reset('cart', 'totalHarga', 'customerName', 'jml_bayar', 'kembalian');
-
-        // Generate invoice baru untuk transaksi selanjutnya
-        $this->invoice = 'INV' . date('Ymd') . str_pad(Transaksi::count() + 1, 3, '0', STR_PAD_LEFT);
+public function processTransaction()
+{
+    // Validasi apakah nama customer diisi
+    if (!$this->customerName) {
+        session()->flash('error', 'Nama customer harus diisi!');
+        return;
     }
+
+    // Validasi apakah jumlah bayar cukup
+    if ($this->jml_bayar < $this->totalHarga) {
+        session()->flash('error', 'Jumlah bayar tidak mencukupi!');
+        return;
+    }
+
+    // Buat transaksi baru
+    $transaksi = Transaksi::create([
+        'invoice' => $this->invoice,               // Nomor invoice
+        'customer_name' => $this->customerName,    // Nama customer
+        'tanggal' => now(),              // Tanggal transaksi
+        'total_harga' => $this->totalHarga,
+    ]);
+
+    // Simpan detail transaksi  
+    foreach ($this->cart as $item) {
+        DetailTransaksi::create([
+            'transaksi_id' => $transaksi->id,
+            'product_id' => $item['product_id'],
+            'jumlah' => $item['jumlah'],
+            'subtotal' => $item['subtotal'],
+        ]);
+    }
+
+    // Tampilkan pesan sukses dan reset keranjang
+    session()->flash('success', 'Transaksi berhasil!');
+
+    // Reset semua data yang relevan setelah transaksi selesai
+    $this->reset('cart', 'totalHarga', 'customerName', 'jml_bayar', 'kembalian');
+
+    // Generate invoice baru untuk transaksi selanjutnya
+    $this->invoice = 'INV' . date('Ymd') . str_pad(Transaksi::count() + 1, 3, '0', STR_PAD_LEFT);
+}
+
 
     public function render()
     {

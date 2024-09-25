@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Livewire\Transaksi;
 
 use App\Models\Transaksi;
+use App\Models\Product; // Tambahkan ini jika Product belum di-import
 use Livewire\Component;
 use Livewire\WithPagination;
 use PDF;
@@ -16,10 +18,14 @@ class LaporanTransaksi extends Component
     {
         // Mengambil data transaksi dengan paginasi
         $transactions = Transaksi::orderBy('tanggal', 'desc')->paginate(10);
+    
+        // Mengambil data produk (jika diperlukan)
+        $products = Product::all(); // Sesuaikan query sesuai kebutuhan
 
         // Menampilkan tampilan laporan transaksi
         return view('livewire.transaksi.laporan-transaksi', [
             'transactions' => $transactions,
+            'products' => $products,
         ]);
     }
 
@@ -36,6 +42,4 @@ class LaporanTransaksi extends Component
             echo $pdf->output();
         }, 'transaksi_' . $transactionId . '.pdf');
     }
-    
-    
 }

@@ -9,12 +9,15 @@ class Product extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'name',
         'description',
-        'price',       // tambahkan price di sini
+        'price',      // Kolom price ditambahkan di sini
+        'image',      // Kolom image ditambahkan di sini
     ];
-    
-
-    
 }

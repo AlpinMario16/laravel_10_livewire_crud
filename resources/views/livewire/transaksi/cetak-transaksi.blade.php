@@ -52,7 +52,7 @@
         <tr>
             <td>
                 @if($item->product)
-                    {{ $item->product->name }}
+                    {{ $item->product->name }} <!-- Nama produk -->
                 @else
                     Produk tidak ditemukan
                 @endif
@@ -60,7 +60,7 @@
             <td>{{ $item->jumlah }}</td>
             <td>
                 @if($item->product)
-                    Rp {{ number_format($item->product->price, 0, ',', '.') }}
+                    Rp {{ number_format($item->product->price, 0, ',', '.') }} <!-- Harga produk -->
                 @else
                     -
                 @endif

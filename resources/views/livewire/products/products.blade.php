@@ -44,7 +44,7 @@
                             <tr wire:key="{{ $product->id }}">
                                 <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $product->name }}</td>
-                                <td>{{ $product->kategori->name ?? 'No Kategori' }}</td>
+                                <td>{{ $product->kategori_id->name ?? 'No Kategori' }}</td>
  <!-- Menampilkan nama kategori -->
                                 <td>{{ $product->description ?? 'Tidak ada deskripsi' }}</td>
 

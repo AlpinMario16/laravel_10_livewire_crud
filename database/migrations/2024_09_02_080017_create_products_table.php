@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
+            $table->decimal('price', 10, 2); // Menambahkan kolom harga
+            $table->string('image'); // Menambahkan kolom gambar
             $table->timestamps();
         });
     }
