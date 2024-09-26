@@ -15,12 +15,16 @@ return new class extends Migration
             $table->id();
             $table->date('tanggal');
             $table->integer('total_harga');
-            $table->string('invoice')->unique();  // Untuk menyimpan nomor invoice
-            $table->string('customer_name');      // Untuk menyimpan nama customer
+            $table->string('invoice')->unique();
+            $table->string('customer_name')->default('');
+             // Tambahkan kolom jml_bayar dan kembalian
+             $table->integer('jml_bayar')->default(0);
+             $table->integer('kembalian')->default(0);
             $table->timestamps();
         });
         
     }
+    
 
     /**
      * Reverse the migrations.

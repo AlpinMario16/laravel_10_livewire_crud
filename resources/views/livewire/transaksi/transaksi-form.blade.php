@@ -34,24 +34,54 @@
 
 
 <!-- Daftar Produk -->
-     <div class="container-fluid mt-4">
+<div class="container-fluid mt-4">
     <div class="row">
-    <!-- <div class="col-lg-6"> -->
         <div class="card card-outline card-warning p-3">
-        <h4>Pilih Produk</h4>
-        <div class="form-group">
-            <select class="form-control" wire:model="selectedProduct" wire:change="addToCart($event.target.value)">
-                <option value="">Pilih Produk</option>
-                @foreach($products as $product)
-                    <option value="{{ $product->id }}">
-                        {{ $product->name }} - Rp {{ number_format($product->price, 0, ',', '.') }}
-                    </option>
-                @endforeach
-            </select>
+            <h4>Pilih Produk</h4>
+            <!-- Input untuk Pencarian -->
+            <div class="form-group">
+            <input type="text" wire:model.live="search" placeholder="Cari Produk..." class="form-control form-control-sm" aria-label="Search">
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Gambar</th>
+                            <th>Nama Produk</th>
+                            <th>Harga</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($products as $product)
+                        <tr>
+                        <td>
+                                    @if($product->image)
+                                    <img src="{{ asset('storage/' . $product->image) }}" alt="Product Image" width="100">
+
+                                    @else
+                                        Gambar tidak tersedia.
+                                    @endif
+                                </td>
+                            <td>{{ $product->name }}</td>
+                            <td>Rp {{ number_format($product->price, 0, ',', '.') }}</td>
+                            <td>
+                                <button class="btn btn-success" wire:click="addToCart({{ $product->id }})">Pilih</button>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+             <!-- Pagination -->
+             <div class="d-flex justify-content-center">
+        {{ $products->links() }}
+    </div>
         </div>
     </div>
 </div>
-</div>
+
      <!-- </div> -->
 
      <div class="container-fluid mt-4">
@@ -112,7 +142,7 @@
         Swal.fire({
             position: 'center',
             icon: "success",
-            title: "Your work has been saved",
+            title: "Transaksi Berhasil",
             showConfirmButton: false,
             timer: 1500
         });

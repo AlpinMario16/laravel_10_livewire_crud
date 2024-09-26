@@ -10,12 +10,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('detail_transaksi', function (Blueprint $table) {
-            // Jangan tambahkan kembali kolom id jika sudah ada
-            // $table->id(); // Kolom ini dihapus atau dikomentari
+        Schema::create('detail_transaksi', function (Blueprint $table) {
+            $table->id(); // Primary Key
 
-            // Kolom relasi ke tabel transaksi dan product
+            // Kolom relasi ke tabel transaksi dan produk
             $table->foreignId('transaksi_id')->constrained('transaksi')->onDelete('cascade');
+
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
 
             // Kolom tambahan
@@ -30,11 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('detail_transaksi', function (Blueprint $table) {
-            // Hapus kolom yang ditambahkan jika rollback
-            $table->dropForeign(['transaksi_id']);
-            $table->dropForeign(['product_id']);
-            $table->dropColumn(['transaksi_id', 'product_id', 'jumlah', 'subtotal']);
-        });
+        Schema::dropIfExists('detail_transaksi');
     }
 };
