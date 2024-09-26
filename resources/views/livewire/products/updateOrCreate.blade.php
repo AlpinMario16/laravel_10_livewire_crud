@@ -1,4 +1,4 @@
-<div x-data="{ showForm: false, isProcessing: false, initializeEditor: () => {
+<div x-data="{ showForm: true, isProcessing: false, initializeEditor: () => {
     setTimeout(() => {
         if (!ClassicEditor.instances['description']) {
             ClassicEditor
@@ -9,12 +9,6 @@
 }}" class="row justify-content-center mt-3 mb-3">
     <div class="col-md-12">
 
-        <!-- Tombol untuk membuka atau menutup formulir -->
-        <button @click="showForm = !showForm; if (showForm) initializeEditor();" class="btn btn-primary mb-3">
-            <span x-show="!showForm">Show Form</span>
-            <span x-show="showForm">Hide Form</span>
-        </button>
-
         <!-- Formulir -->
         <div x-show="showForm" class="card">
             <div class="card-header">
@@ -24,7 +18,7 @@
             </div>
             <div class="card-body">
                 <form @submit.prevent="isProcessing = true; $wire.save().then(() => isProcessing = false)">
-                    
+
                     <div class="mb-3 row">
                         <label for="name" class="col-md-4 col-form-label text-md-end text-start">Product Name :</label>
                         <div class="col-md-6">
@@ -34,7 +28,7 @@
                             @endif
                         </div>
                     </div>
-                    
+
                     <div class="mb-3 row">
                         <label for="kategori_id" class="col-md-4 col-form-label text-md-end text-start">Product Kategori :</label>
                         <div class="col-md-6">
@@ -50,8 +44,7 @@
                     <div class="mb-3 row" wire:ignore>
                         <label for="description" class="col-md-4 col-form-label text-md-end text-start">Product Description :</label>
                         <div class="col-md-6">
-                        <textarea   
-                        class="form-control @error('description') is-invalid @enderror" id="description" wire:model.defer="description"></textarea>
+                            <textarea class="form-control @error('description') is-invalid @enderror" id="description" wire:model.defer="description"></textarea>
                             @if ($errors->has('description'))
                                 <span class="text-danger">{{ $errors->first('description') }}</span>
                             @endif
@@ -66,17 +59,16 @@
                         </div>
                     </div>
 
-                        <!-- Tambahkan input file untuk gambar -->
-                        <div class="mb-3 row">
+                    <!-- Tambahkan input file untuk gambar -->
+                    <div class="mb-3 row">
                         <label for="image" class="col-md-4 col-form-label text-md-end text-start">Image :</label>
                         <div class="col-md-6">
-                        <input type="file" wire:model="image" id="image" class="form-control">
-                        @if($image)
-                            <img src="{{ $image->temporaryUrl() }}" width="100" class="mt-2" alt="Preview Image">
-                        @endif
-                    </div>
+                            <input type="file" wire:model="image" id="image" class="form-control">
+                            @if($image)
+                                <img src="{{ $image->temporaryUrl() }}" width="100" class="mt-2" alt="Preview Image">
+                            @endif
                         </div>
-
+                    </div>
 
                     <div class="mb-3 row">
                         <button type="submit" class="col-md-3 offset-md-5 btn btn-success" :disabled="isProcessing">
@@ -92,27 +84,27 @@
                         </div>
                     @endif
 
-                       <!-- Tombol Add More -->
-                       @if($isAdd)
-                    <div class="mb-3 row">
-                        <button type="button" class="col-md-3 offset-md-5 btn btn-primary" @click="inputs.push({ name: '', description: '' })">
-                            Add More
-                        </button>
-                    </div>
-                     @endif
+                    <!-- Tombol Add More -->
+                    @if($isAdd)
+                        <div class="mb-3 row">
+                            <button type="button" class="col-md-3 offset-md-5 btn btn-primary" @click="inputs.push({ name: '', description: '' })">
+                                Add More
+                            </button>
+                        </div>
+                    @endif
 
                     <div class="mb-3 row">
                         <span x-show="isProcessing" class="col-md-3 offset-md-5 text-primary">Processing...</span>
                     </div>
-                    
+
                 </form>
             </div>
         </div>
-    </div>    
+    </div>
 </div>
+
 <!-- Tambahkan skrip CKEditor -->
- 
-<script>    
+<script>
 document.addEventListener('DOMContentLoaded', function() {
     const descriptionElement = document.querySelector('#description');
     let editorInstance;
@@ -137,25 +129,21 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+function success() {
+    Swal.fire({
+        position: 'center',
+        icon: "success",
+        title: "Your work has been saved",
+        showConfirmButton: false,
+        timer: 1500
+    });
+}
 
-
-    function success() {
-        Swal.fire({
-            position: 'center',
-            icon: "success",
-            title: "Your work has been saved",
-            showConfirmButton: false,
-            timer: 1500
-        });
-    }
-
-    function deleteConfirmed(id) {
-        Swal.fire({
-            title: "Deleted!",
-                    text: "Produk berhasil Dihapus.",
-                    icon: "success"
-
-        });
-    }
+function deleteConfirmed(id) {
+    Swal.fire({
+        title: "Deleted!",
+        text: "Produk berhasil Dihapus.",
+        icon: "success"
+    });
+}
 </script>
-
