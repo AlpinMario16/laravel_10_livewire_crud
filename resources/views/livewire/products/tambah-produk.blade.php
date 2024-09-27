@@ -13,10 +13,23 @@
                 @endforeach
             </select>
         </div>
-        <div class="mb-3">
-            <label for="description" class="form-label">Deskripsi</label>
-            <textarea class="form-control" id="description" placeholder="Masukkan deskripsi produk" wire:model="description"></textarea>
-        </div>
+        <div class="form-group" wire:ignore x-data x-init="
+    ClassicEditor
+        .create($refs.editor)
+        .then(editor => {
+            editor.model.document.on('change:data', () => {
+                @this.set('description', editor.getData());
+            });
+        })
+        .catch(error => {
+            console.error(error);
+        });
+">
+    <label for="description" class="form-label">Description</label>
+    <textarea x-ref="editor" wire:model.defer="description" class="form-control" rows="4">{{ $description }}</textarea>
+    @error('description') <span class="text-danger">{{ $message }}</span> @enderror
+</div>
+
 
 
         <div class="mb-3">
@@ -63,5 +76,22 @@
         });
 });
 
+function success() {
+    Swal.fire({
+        position: 'center',
+        icon: "success",
+        title: "Your work has been saved",
+        showConfirmButton: false,
+        timer: 1500
+    });
+}
+
+function deleteConfirmed(id) {
+    Swal.fire({
+        title: "Deleted!",
+        text: "Produk berhasil Dihapus.",
+        icon: "success"
+    });
+}
 </script>
 

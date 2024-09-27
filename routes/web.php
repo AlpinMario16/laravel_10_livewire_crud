@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Products\Products;
+use App\Livewire\EditProduk;
 use App\Livewire\Kategoris\Kategoris;
 use App\Livewire\Transaksi\TransaksiForm;
 use App\Livewire\Transaksi\LaporanTransaksi;
@@ -27,6 +28,7 @@ Route::get('/product', Products::class)->name("products");
 Route::get('/kategoris', Kategoris::class)->name("kategoris");
 Route::get('/transaksi', TransaksiForm::class)->name("transaksi-form");
 Route::get('/laporan-transaksi', LaporanTransaksi::class)->name("laporan.transaksi");
+Route::get('/produk/edit/{productId}', EditProduk::class)->name('produk.edit');
 
 
 Route::get('/products', Products::class);

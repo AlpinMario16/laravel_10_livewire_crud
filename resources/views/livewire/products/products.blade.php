@@ -62,7 +62,9 @@
                                 <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $product->name }}</td>
                                 <td>{{ $product->kategori_id->name ?? 'No Kategori' }}</td> <!-- Menampilkan nama kategori -->
-                                <td>{{ $product->description ?? 'Tidak ada deskripsi' }}</td>
+                                <td>
+                                            {!! $product->description ?? '<span class="text-muted">Tidak ada deskripsi</span>' !!}
+                                        </td>
                                 <td>{{ $product->price }}</td>
                                 <td>
                                     @if($product->image)
@@ -72,6 +74,7 @@
                                     @endif
                                 </td>
                                 <td>
+                                    
                                     <button wire:click="edit({{ $product->id }})" class="btn btn-primary btn-sm">
                                         <i class="bi bi-pencil-square"></i> Edit
                                     </button>   
