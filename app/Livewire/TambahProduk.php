@@ -15,28 +15,28 @@ class TambahProduk extends Component
     
 
     public function saveProduct()
-    {
-        $this->validate([
-            'name' => 'required',
-            'kategori_id' => 'required',
-            'price' => 'required|numeric',
-            'image' => 'nullable|image|max:1024', // Validasi gambar
-        ]);
+{
+    $this->validate([
+        'name' => 'required',
+        'kategori_id' => 'required',
+        'price' => 'required|numeric',
+        'image' => 'nullable|image|max:1024', // Validasi gambar
+    ]);
 
-        // Upload gambar jika ada
-        $imageName = $this->image ? $this->image->store('products', 'public') : null;
+    // Upload gambar jika ada, jika tidak ada gunakan default
+    $imageName = $this->image ? $this->image->store('products', 'public') : 'default-image.png';
 
-        Product::create([
-            'name' => $this->name,
-            'kategori_id' => $this->kategori_id,
-            'description' => $this->description,
-            'price' => $this->price,
-            'image' => $imageName,
-        ]);
+    Product::create([
+        'name' => $this->name,
+        'kategori_id' => $this->kategori_id,
+        'description' => $this->description,
+        'price' => $this->price,
+        'image' => $imageName,
+    ]);
 
-        session()->flash('success', 'Produk berhasil ditambahkan!');
-        $this->resetFields(); // Reset form setelah simpan
-    }
+    session()->flash('success', 'Produk berhasil ditambahkan!');
+    $this->resetFields(); // Reset form setelah simpan
+}
 
     public function resetFields()
 {

@@ -61,7 +61,9 @@
                             <tr wire:key="{{ $product->id }}">
                                 <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $product->name }}</td>
-                                <td>{{ $product->kategori_id->name ?? 'No Kategori' }}</td> <!-- Menampilkan nama kategori -->
+                                <td>{{ $product->kategori ? $product->kategori->name : 'No Kategori' }}</td>
+
+ <!-- Menampilkan nama kategori -->
                                 <td>
                                             {!! $product->description ?? '<span class="text-muted">Tidak ada deskripsi</span>' !!}
                                         </td>
@@ -81,6 +83,26 @@
                                     <button @click="deleteConfirmed({{ $product->id }})" wire:click="delete({{ $product->id }})" class="btn btn-danger btn-sm">
                                         <i class="bi bi-trash"></i> Delete
                                     </button>
+                                    <button wire:click="edit({{ $product->id }})" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#editProdukModal">
+    <i class="bi bi-pen-circle"></i> Edit Produk
+</button>
+
+
+<!-- Include Modal Edit Produk -->
+<div class="modal fade" id="editProdukModal" tabindex="-1" aria-labelledby="editProdukModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProdukModalLabel">Edit Produk</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @livewire('edit-produk', ['productId' => $product->id])
+            </div>
+        </div>
+    </div>
+</div>
+
                                 </td>
                             </tr>
                         @empty

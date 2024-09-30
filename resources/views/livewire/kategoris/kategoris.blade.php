@@ -16,16 +16,11 @@
         <div class="card">
             <div class="card-header">Kategori List</div>
             <div class="card-body">
-            <div class="input-group mb-3">
-            <div class="input-group-append">
-    <input type="text" wire:model.live="searchTerm" placeholder="Cari Kategori..." class="form-control form-control-sm" aria-label="Search">
-</div>
-            </div>
-            
-
-
-
-
+                <div class="input-group mb-3">
+                    <div class="input-group-append">
+                        <input type="text" wire:model.debounce.500ms="searchTerm" placeholder="Cari Kategori..." class="form-control form-control-sm" aria-label="Search">
+                    </div>
+                </div>
 
                 <table class="table table-striped table-bordered">
                     <thead>
@@ -45,13 +40,9 @@
                                         <i class="bi bi-pencil-square"></i> Edit
                                     </button>   
 
-                                    
-                    <button 
-                          @click="deleteConfirmed({{ $kategori->id }})" wire:click="delete({{ $kategori->id }})" class="btn btn-danger btn-sm">
-                        <i class="bi bi-trash"></i> Delete
-                    </button>
-
-                                    
+                                    <button wire:click="deleteConfirmed({{ $kategori->id }})" class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
                                 </td>
                             </tr>
                         @empty
@@ -74,4 +65,3 @@
         </div>    
     </div>
 </div>
-

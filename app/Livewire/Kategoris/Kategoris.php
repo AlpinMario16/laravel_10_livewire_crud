@@ -14,15 +14,11 @@ class kategoris extends Component
 
     public $searchTerm;
 
-    public $extraCategories = [];
-
-    public $inputs = [];
+    public $inputs = []; // Menggunakan $inputs untuk input tambahan
 
     protected $listeners = [
         'deleteConfirmed' => 'delete',
     ];
-    
-
 
     #[Locked]
     public $kategori_id;
@@ -42,7 +38,7 @@ class kategoris extends Component
     {
         $this->title = 'Add New kategori';
 
-        $this->reset('name');
+        $this->reset('name', 'inputs'); // Mereset name dan inputs
 
         $this->isEdit = false;
 
@@ -50,15 +46,15 @@ class kategoris extends Component
     }
 
     public function index()
-{
-    return view('livewire.kategori'); // Mengarahkan ke resources/views/livewire/kategori.blade.php
-}
-
-
-public function addMore()
     {
-        $this->extraCategories[] = ['name' => '']; // Tambah input baru ke array
+        return view('livewire.kategori'); // Mengarahkan ke resources/views/livewire/kategori.blade.php
     }
+
+    public function addMore()
+    {
+        $this->inputs[] = ['name' => '']; // Tambah input baru ke array inputs
+    }
+
     public function save()
     {
         // Validasi input dasar
@@ -66,30 +62,26 @@ public function addMore()
             'name' => 'required',  // Validasi untuk field name
             'inputs.*.name' => 'required', // Validasi untuk setiap input dalam array inputs
         ]);
-    
+
         // Menyimpan atau memperbarui kategori utama
         $kategori = kategori::updateOrCreate(['id' => $this->kategori_id], [
             'name' => $this->name
         ]);
-    
+
         // Jika ada inputs tambahan yang ditambahkan menggunakan Add More, simpan ke database
         foreach ($this->inputs as $input) {
-            // Sesuaikan logika ini jika kamu ingin menyimpan input ke tabel yang terpisah
-            // Misalnya menyimpan ke tabel terkait dengan kategori yang sama
             kategori::create([
-                'kategori_id' => $kategori->id,  // Hubungkan dengan kategori utama yang baru saja disimpan
+                'kategori_id' => $kategori->id,  // Hubungkan dengan kategori utama
                 'name' => $input['name']  // Simpan nama dari input Add More
             ]);
         }
-    
+
         // Menampilkan pesan sukses
         session()->flash('success', $this->kategori_id ? 'Kategori updated!' : 'Kategori created!');
-    
-        // Mereset form tanpa emit
-        $this->reset(['name', 'inputs', 'kategori_id']);
-    }
-    
 
+        // Mereset form tanpa emit
+        $this->resetFields();
+    }
 
     public function edit($id)
     {
@@ -111,18 +103,17 @@ public function addMore()
     }
 
     public function deleteConfirmed($id)
-{
-    // Panggil method delete untuk menghapus produk
-    $this->delete($id);
-}
+    {
+        // Panggil method delete untuk menghapus produk
+        $this->delete($id);
+    }
 
-public function delete($id)
-{
-    kategori::find($id)->delete();
+    public function delete($id)
+    {
+        kategori::find($id)->delete();
 
-    session()->flash('success', 'kategori has been deleted.');
-}
-
+        session()->flash('success', 'kategori has been deleted.');
+    }
 
     public function updatingSearch()
     {
@@ -130,13 +121,12 @@ public function delete($id)
     }
 
     public function render()
-{
-    $kategoris = kategori::where('name', 'like', '%' . $this->searchTerm . '%')
-                        ->paginate(5);
+    {
+        $kategoris = kategori::where('name', 'like', '%' . $this->searchTerm . '%')
+                            ->paginate(5);
 
-                        return view('livewire.kategoris.kategoris', [
-                            'kategoris' => $kategoris,
-                        ]);
-}
-
+        return view('livewire.kategoris.kategoris', [
+            'kategoris' => $kategoris,
+        ]);
+    }
 }

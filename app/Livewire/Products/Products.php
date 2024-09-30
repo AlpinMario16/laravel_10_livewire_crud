@@ -31,6 +31,12 @@ class Products extends Component
         $this->isAdd = true;
     }
 
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class, 'kategori_id', 'id');
+    }
+    
+
     public function setDescription($value)
     {
         $this->description = $value;
