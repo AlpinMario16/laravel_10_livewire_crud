@@ -26,7 +26,7 @@
 
     <div class="mb-3 row">
         <label for="image" class="col-md-4 col-form-label text-md-end text-start">Image :</label>
-        <div class="col-md-6">
+        <div class="col-md-6" wire:ignore> <!-- Tambahkan wire:ignore di sini -->
             <input type="file" wire:model="image" id="image" class="form-control">
             
             <!-- Tampilkan preview gambar jika sudah dipilih -->
@@ -46,3 +46,17 @@
 
     <button type="submit" class="btn btn-primary">Update Produk</button>
 </form>
+
+<script>
+    document.addEventListener('livewire:load', function () {
+        Livewire.on('showEditModal', () => {
+            var modal = new bootstrap.Modal(document.getElementById('editProdukModal'));
+            modal.show();
+        });
+
+        Livewire.on('closeEditModal', () => {
+            var modal = bootstrap.Modal.getInstance(document.getElementById('editProdukModal'));
+            modal.hide();
+        });
+    });
+</script>

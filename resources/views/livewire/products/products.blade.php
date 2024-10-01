@@ -89,7 +89,7 @@
 
 
 <!-- Include Modal Edit Produk -->
-<div class="modal fade" id="editProdukModal" tabindex="-1" aria-labelledby="editProdukModalLabel" aria-hidden="true">
+<div class="modal fade" id="editProdukModal" tabindex="-1" aria-labelledby="editProdukModalLabel" aria-hidden="true" wire:ignore.self>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -102,6 +102,7 @@
         </div>
     </div>
 </div>
+
 
                                 </td>
                             </tr>

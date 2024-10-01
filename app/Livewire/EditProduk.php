@@ -29,11 +29,14 @@ class EditProduk extends Component
         }
     }
 
-    public function edit($id)
-{
-    $this->product = Product::find($id); 
-    // Pastikan $this->product mengisi variabel form seperti $this->name, $this->price, dsb.
-}
+    public function edit($productId)
+    {
+        $this->product = Product::find($productId);
+        
+        // Emit event ke JavaScript untuk menampilkan modal
+        $this->emit('showEditModal');
+    }
+    
 
 
     public function updateProduct()
