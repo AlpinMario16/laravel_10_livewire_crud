@@ -1,3 +1,5 @@
+
+
 <div class="row justify-content-center mt-3">
     <div class="col-md-12">
         @if(session('success'))
@@ -77,15 +79,15 @@
                                 </td>
                                 <td>
                                     
-                                    <button wire:click="edit({{ $product->id }})" class="btn btn-primary btn-sm">
+                                    <!-- <button wire:click="edit({{ $product->id }})" class="btn btn-primary btn-sm">
                                         <i class="bi bi-pencil-square"></i> Edit
-                                    </button>   
+                                    </button>    -->
+                                    <button wire:click="edit({{ $product->id }})" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editProdukModal">
+                                    <i class="bi bi-pencil-square"></i> Edit
+</button>
                                     <button @click="deleteConfirmed({{ $product->id }})" wire:click="delete({{ $product->id }})" class="btn btn-danger btn-sm">
                                         <i class="bi bi-trash"></i> Delete
                                     </button>
-                                    <button wire:click="edit({{ $product->id }})" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#editProdukModal">
-    <i class="bi bi-pen-circle"></i> Edit Produk
-</button>
 
 
 <!-- Include Modal Edit Produk -->
